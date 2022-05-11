@@ -130,8 +130,8 @@ export const makeSetExp = (v: VarRef, val: CExp): SetExp =>
     ({tag: "SetExp", var: v, val: val});
 
 // HW3
-export const makeTraceExp = (v: VarRef): TraceExp =>
-    // to be completed.
+export const makeTraceExp = (v: VarRef): TraceExp => 
+    ({tag: "TraceExp", var: v});
 
 // Type predicates for disjoint types
 export const isProgram = (x: any): x is Program => x.tag === "Program";
@@ -156,7 +156,7 @@ export const isLetrecExp = (x: any): x is LetrecExp => x.tag === "LetrecExp";
 export const isSetExp = (x: any): x is SetExp => x.tag === "SetExp";
 
 // HW3
-export const isTraceExp = (x: any): x is TraceExp => // complete this
+export const isTraceExp = (x: any): x is TraceExp => x.tag === "TraceExp";
 
 // Type predicates for type unions
 export const isExp = (x: any): x is Exp => isDefineExp(x) || isCExp(x);
@@ -250,9 +250,10 @@ const parseProcExp = (vars: Sexp, body: Sexp[]): Result<ProcExp> =>
     makeFailure(`Invalid vars for ProcExp`);
 
 // HW3
-export const parseTraceExp: (params: Sexp[]) => Result<TraceExp> = 
-    (params) => 
-        // completer this 
+export const parseTraceExp = (params: Sexp[]): Result<TraceExp> => 
+    params.length !== 1 ? makeFailure("Trace receives 1 Argument") :
+    !isIdentifier(params[0]) ? makeFailure("Function Arg must be Identifier") :
+    makeOk(makeTraceExp(makeVarRef(params[0])));
         
 const isGoodBindings = (bindings: Sexp): bindings is [string, Sexp][] =>
     isArray(bindings) &&
